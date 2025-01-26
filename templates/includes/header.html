@@ -3,11 +3,11 @@
     <nav class="container mx-auto px-6 py-3">
         <div class="flex justify-between items-center">
             <div class="text-xl font-bold text-gray-800 md:text-2xl hover:text-gray-700">
-                <a href="index_with_side_bar.html">Modern Blog</a>
+                <a href="{% url 'home' %}">Modern Blog</a>
             </div>
             <div class="flex items-center">
                 <div class="hidden md:flex items-center">
-                    <a href="#" class="text-gray-800 hover:text-blue-500 mx-3 transition duration-300">Home</a>
+                    <a href="{% url 'home' %}" class="text-gray-800 hover:text-blue-500 mx-3 transition duration-300">Home</a>
                     <a href="#" class="text-gray-800 hover:text-blue-500 mx-3 transition duration-300">About</a>
                     <a href="#" class="text-gray-800 hover:text-blue-500 mx-3 transition duration-300">Contact</a>
                 </div>

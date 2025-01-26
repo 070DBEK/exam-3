@@ -1,0 +1,125 @@
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Custom styles for blog posts */
+.blog-post {
+    transition: box-shadow 0.3s ease;
+}
+
+.blog-post:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive font sizes */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Custom styles for buttons */
+.custom-button {
+    transition: all 0.3s ease;
+}
+
+.custom-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient background for featured sections */
+.featured-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Custom styles for form inputs */
+.custom-input {
+    transition: border-color 0.3s ease;
+}
+
+.custom-input:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+/* Styles for tags and categories */
+.tag {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tag:hover {
+    background-color: #4299e1;
+    color: white;
+}
+
+/* Custom styles for author bio */
+.author-bio {
+    border-left: 4px solid #4299e1;
+    padding-left: 1rem;
+}
+
+/* Styles for blockquotes */
+blockquote {
+    border-left: 4px solid #4299e1;
+    padding-left: 1rem;
+    font-style: italic;
+    color: #4a5568;
+}
+
+/* Custom styles for code blocks */
+pre {
+    background-color: #2d3748;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+}
+
+/* Responsive grid for featured posts */
+.featured-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Custom styles for newsletter form */
+.newsletter-form {
+    background-color: #edf2f7;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+/* Styles for social media icons */
+.social-icon {
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+}
+

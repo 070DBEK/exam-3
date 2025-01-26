@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Modern Blog{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap">
+    <!-- Sidebar -->
+    <div class="w-full md:w-1/4 lg:w-1/5 px-4 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6 animate-fade-in">
+            <h2 class="text-xl font-semibold mb-4">Filters</h2>
+            <form method="GET">
+
+                <!-- Categories Filter -->
+                <div class="mb-4">
+                    <h3 class="font-medium mb-2">Categories</h3>
+                    <div class="space-y-2">
+                        {% for category in catalogs %}
+                        <label class="flex items-center">
+                            <input type="checkbox" name="category" value="{{ category.id }}" class="form-checkbox text-blue-500"
+                            {% if category.id|stringformat:"s" in category_filter %}checked{% endif %}>
+                            <span class="ml-2 capitalize">{{ category.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Sort by Filter -->
+                <div class="mb-4">
+                    <h3 class="font-medium mb-2">Sort by</h3>
+                    <select name="sort" class="w-full border rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-blue-500">
+                        <option value="latest" {% if request.GET.sort == 'latest' %}selected{% endif %}>Latest</option>
+                        <option value="popular" {% if request.GET.sort == 'popular' %}selected{% endif %}>Most Popular</option>
+                        <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                    </select>
+                </div>
+
+                <!-- Date Range Filter -->
+                <div class="mb-4">
+                    <h3 class="font-medium mb-2">Date Range</h3>
+                    <input type="date" name="start_date" class="w-full border rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-blue-500 mb-2" value="{{ request.GET.start_date }}">
+                    <input type="date" name="end_date" class="w-full border rounded-md py-2 px-3 text-gray-700 focus:outline-none focus:border-blue-500" value="{{ request.GET.end_date }}">
+                </div>
+
+                <!-- Hashtags Filter -->
+                <div class="mb-4">
+                    <h3 class="font-medium mb-2">Hashtags</h3>
+                    <div class="space-y-2">
+                        {% for tag in tags %}
+                        <label class="flex items-center">
+                            <input type="checkbox" name="hashtag" value="{{ tag.id }}" class="form-checkbox text-blue-500"
+                            {% if tag.id|stringformat:"s" in hashtag_filter %}checked{% endif %}>
+                            <span class="ml-2">#{{ tag.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 mt-4">
+                    Apply Filters
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="w-full md:w-3/4 lg:w-4/5 px-4">
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <form class="flex items-center" method="GET" action="{% url 'home' %}">
+                <input type="text" name="q" placeholder="Search blog posts..." class="w-full px-4 py-2 rounded-l-lg border text-gray-800 border-gray-200 bg-white focus:outline-none focus:border-blue-500" value="{{ request.GET.q }}">
+                <button class="px-4 py-2 rounded-r-lg bg-blue-500 text-white font-bold hover:bg-blue-600 focus:outline-none transition duration-300">Search</button>
+            </form>
+        </div>
+
+        <!-- Blog Posts -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in page_obj %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden animate-fade-in">
+                <img src="{{ post.img.url }}" alt="Blog post image" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-xl font-semibold mb-2">
+                        <a href="{% url 'posts:detail' post.id %}" class="text-gray-800 hover:text-blue-500 transition duration-300">{{ post.title }}</a>
+                    </h2>
+                    <p class="text-gray-600 mb-4">{{ post.summary }}</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="{{ post.authors.profile_picture.url }}" alt="Author" class="w-8 h-8 rounded-full mr-2">
+                            <span class="text-sm text-gray-700">{{ post.author.username }}</span>
+                        </div>
+                        <span class="text-sm text-gray-500">{{ post.read_time }} min read</span>
+                    </div>
+                    <div class="mt-4 flex flex-wrap">
+                        {% for hashtag in post.tags.all %}
+                            <span class="text-xs bg-blue-100 text-blue-800 rounded-full px-2 py-1 mr-2 mb-2">#{{ hashtag.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-12 flex justify-center">
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 border rounded-l-md bg-white text-gray-700 hover:bg-gray-100">
+                    Previous
+                </a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <a href="?page={{ num }}" class="px-3 py-1 border {% if page_obj.number == num %}bg-blue-500 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100{% endif %}">{{ num }}</a>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 border rounded-r-md bg-white text-gray-700 hover:bg-gray-100">
+                    Next
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

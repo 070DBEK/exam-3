@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - Modern Blog{% endblock %}
+
+{% block content %}
+
+<article class="bg-white rounded-lg shadow-md overflow-hidden">
+    <img src="{{ post.img.url }}" alt="Blog post cover image" class="w-full h-64 object-cover" loading="lazy">
+    <div class="p-6 md:p-8">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">{{ post.title }}</h1>
+        <div class="flex items-center mb-4">
+            <img src="{{ post.author.profile_picture_url }}" alt="Author" class="w-10 h-10 rounded-full mr-3" loading="lazy">
+            <div>
+                <p class="font-semibold text-gray-800">{{ post.author.get_full_name|default:"Unknown Author" }}</p>
+                <p class="text-sm text-gray-600">Published on {{ post.created_at|date:"F j, Y" }} • {{ post.reading_time }} min read</p>
+            </div>
+        </div>
+        <div class="prose max-w-none">
+            {{ post.content|safe }}
+        </div>
+
+        <div class="mt-8 flex flex-wrap">
+            {% for tag in post.tags.all %}
+                <span class="text-sm bg-blue-100 text-blue-800 rounded-full px-3 py-1 mr-2 mb-2">#{{ tag.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</article>
+
+<!-- Comments Section -->
+<section class="mt-12 bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-6">Comments</h2>
+    <div class="space-y-6">
+        {% for comment in post.comments.all %}
+            <div class="flex">
+                <div>
+                    <h3 class="font-semibold">{{ comment.author }}</h3>
+                    <p class="text-gray-600 text-sm mb-2">Posted on {{ comment.created_at|date:"F j, Y" }}</p>
+                    <p>{{ comment.content }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+        {% endfor %}
+
+        <!-- Add Comment Form -->
+        <form method="POST" class="mt-8">
+            {% csrf_token %}
+            <h3 class="text-xl font-semibold mb-4">Add a Comment</h3>
+
+            {% if form.errors %}
+                <div class="text-red-600 mb-4">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <p>{{ field.label }}: {{ field.errors|join:", " }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="mb-4">
+                <label for="first_name" class="block text-gray-700 text-sm font-bold mb-2">First Name</label>
+                <input type="text" id="first_name" name="first_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="last_name" class="block text-gray-700 text-sm font-bold mb-2">Last Name</label>
+                <input type="text" id="last_name" name="last_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="img" class="block text-gray-700 text-sm font-bold mb-2">Upload Photo</label>
+                <input type="file" id="img" name="img" accept="image/*" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label for="comment" class="block text-gray-700 text-sm font-bold mb-2">Comment</label>
+                <textarea id="comment" name="comment" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
+            </div>
+
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit Comment</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
