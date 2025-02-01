@@ -3,6 +3,7 @@
 {% block title %}Modern Blog{% endblock %}
 
 {% block content %}
+
 <div class="flex flex-wrap">
     <!-- Sidebar -->
     <div class="w-full md:w-1/4 lg:w-1/5 px-4 mb-8">
@@ -17,7 +18,7 @@
                         {% for category in catalogs %}
                         <label class="flex items-center">
                             <input type="checkbox" name="category" value="{{ category.id }}" class="form-checkbox text-blue-500"
-                            {% if category.id|stringformat:"s" in category_filter %}checked{% endif %}>
+                            {% if category.id in category_filter %}checked{% endif %}>
                             <span class="ml-2 capitalize">{{ category.name }}</span>
                         </label>
                         {% endfor %}
@@ -84,7 +85,7 @@
                     <p class="text-gray-600 mb-4">{{ post.summary }}</p>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <img src="{{ post.authors.profile_picture.url }}" alt="Author" class="w-8 h-8 rounded-full mr-2">
+                            <img src="{{ post.author.profile_picture.url }}" alt="Author" class="w-8 h-8 rounded-full mr-2">
                             <span class="text-sm text-gray-700">{{ post.author.username }}</span>
                         </div>
                         <span class="text-sm text-gray-500">{{ post.read_time }} min read</span>
@@ -103,15 +104,22 @@
         <div class="mt-12 flex justify-center">
             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                 {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 border rounded-l-md bg-white text-gray-700 hover:bg-gray-100">
+                <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                   class="px-3 py-1 border rounded-l-md bg-white text-gray-700 hover:bg-gray-100">
                     Previous
                 </a>
                 {% endif %}
+
                 {% for num in page_obj.paginator.page_range %}
-                <a href="?page={{ num }}" class="px-3 py-1 border {% if page_obj.number == num %}bg-blue-500 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100{% endif %}">{{ num }}</a>
+                <a href="?page={{ num }}{% for key, value in request_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                   class="px-3 py-1 border {% if page_obj.number == num %}bg-blue-500 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100{% endif %}">
+                    {{ num }}
+                </a>
                 {% endfor %}
+
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 border rounded-r-md bg-white text-gray-700 hover:bg-gray-100">
+                <a href="?page={{ page_obj.next_page_number }}{% for key, value in request_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                   class="px-3 py-1 border rounded-r-md bg-white text-gray-700 hover:bg-gray-100">
                     Next
                 </a>
                 {% endif %}
