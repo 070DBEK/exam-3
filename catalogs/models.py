@@ -14,7 +14,3 @@ class Catalog(BaseModel):
 
     def __str__(self):
         return self.name
-
-    class Meta:
-        verbose_name = "Catalog"
-        verbose_name_plural = "Catalogs"
